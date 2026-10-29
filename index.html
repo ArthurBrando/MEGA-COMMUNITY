@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MEGA COMMUNITY — Apps, jogos e muito mais</title>
+<meta name="description" content="Acervo gratuito de apps, jogos e muito mais. Tudo grátis na MEGA COMMUNITY." />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#04060d;
+    --surface:#0a1020;
+    --surface-2:#0e1729;
+    --line:rgba(255,255,255,.08);
+    --blue:#2f7bff;
+    --blue-2:#4aa8ff;
+    --text:#eaf1ff;
+    --muted:#8ea2c2;
+    --radius:18px;
+  }
+  [hidden]{display:none!important}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);min-height:100vh;
+    display:flex;flex-direction:column;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  img{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  a{color:inherit;text-decoration:none}
+
+  /* ---------- fundo ---------- */
+  .bg-orbs{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(900px 520px at 50% -12%, rgba(47,123,255,.28), transparent 70%),
+      radial-gradient(700px 420px at 92% 8%, rgba(74,168,255,.14), transparent 70%),
+      radial-gradient(700px 420px at 4% 28%, rgba(47,123,255,.12), transparent 70%),
+      radial-gradient(800px 600px at 50% 112%, rgba(47,123,255,.10), transparent 70%);
+  }
+
+  /* ---------- header ---------- */
+  .site-header{
+    position:relative;z-index:1;padding:52px 20px 8px;
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+  }
+  .logo-wrap{position:relative;width:132px;height:132px;display:grid;place-items:center;margin-bottom:22px}
+  .logo-wrap::before{
+    content:"";position:absolute;inset:-34px;border-radius:50%;
+    background:radial-gradient(circle,rgba(47,123,255,.55),transparent 62%);
+    filter:blur(22px);animation:pulse 6s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:.6;transform:scale(.94)}50%{opacity:1;transform:scale(1.07)}}
+  .logo-wrap img{
+    position:relative;z-index:2;width:124px;height:124px;object-fit:contain;
+    filter:drop-shadow(0 16px 34px rgba(0,0,0,.65));
+  }
+  .logo-fallback{
+    display:none;position:relative;z-index:2;width:124px;height:124px;border-radius:32px;
+    place-items:center;font-weight:800;font-size:34px;letter-spacing:.06em;color:#fff;
+    background:linear-gradient(150deg,#2f7bff,#0b2a66);
+    border:1px solid rgba(255,255,255,.18);
+  }
+  .logo-fallback.show{display:grid}
+
+  .brand{
+    font-size:clamp(26px,6.4vw,44px);font-weight:800;letter-spacing:.14em;
+    line-height:1.05;display:flex;gap:.34em;flex-wrap:wrap;justify-content:center;
+  }
+  .brand .b1{color:#fff}
+  .brand .b2{
+    background:linear-gradient(90deg,#4aa8ff,#2f7bff 60%,#7cc4ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .tagline{
+    margin-top:12px;color:var(--muted);font-size:clamp(13px,2.4vw,15.5px);
+    max-width:580px;line-height:1.55;
+  }
+
+  /* ---------- busca ---------- */
+  .search-wrap{
+    position:relative;display:flex;align-items:center;gap:12px;width:min(640px,100%);
+    margin-top:26px;padding:0 16px;height:58px;
+    background:linear-gradient(180deg,rgba(16,26,47,.95),rgba(10,16,32,.95));
+    border:1px solid var(--line);border-radius:16px;
+    transition:border-color .25s, box-shadow .25s;
+    box-shadow:0 18px 40px -24px rgba(0,0,0,.9);
+  }
+  .search-wrap:focus-within{
+    border-color:rgba(74,168,255,.55);
+    box-shadow:0 0 0 4px rgba(47,123,255,.14),0 18px 40px -24px rgba(0,0,0,.9);
+  }
+  .search-wrap > svg{width:20px;height:20px;flex:0 0 auto;color:#fff;opacity:.85}
+  .search-wrap input{
+    flex:1;min-width:0;background:none;border:0;outline:none;
+    color:var(--text);font-size:15.5px;
+  }
+  .search-wrap input::placeholder{color:#6f83a5}
+  .search-wrap input::-webkit-search-cancel-button{display:none}
+  .clear-search{
+    width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+    color:#cfe0ff;background:rgba(255,255,255,.06);transition:.2s;
+  }
+  .clear-search:hover{background:rgba(255,255,255,.14)}
+  .clear-search svg{width:15px;height:15px}
+
+  /* ---------- tabs ---------- */
+  .tabs{
+    display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:26px;padding:6px;
+    background:rgba(10,16,32,.72);border:1px solid var(--line);border-radius:16px;
+    backdrop-filter:blur(8px);
+  }
+  .tab{
+    display:inline-flex;align-items:center;gap:9px;padding:11px 18px;border-radius:12px;
+    font-size:14px;font-weight:600;color:#a9bcda;transition:.22s;white-space:nowrap;
+  }
+  .tab svg{width:18px;height:18px;color:#fff;opacity:.75;transition:.22s}
+  .tab:hover{color:#fff;background:rgba(255,255,255,.05)}
+  .tab.active{
+    color:#fff;background:linear-gradient(180deg,rgba(47,123,255,.95),rgba(30,86,196,.95));
+    box-shadow:0 10px 26px -12px rgba(47,123,255,.9);
+  }
+  .tab.active svg{opacity:1}
+
+  /* ---------- main / grid ---------- */
+  .container{position:relative;z-index:1;width:min(1180px,100%);margin:0 auto;padding:38px 20px 60px;flex:1}
+  .section-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:22px}
+  .section-head h2{font-size:19px;font-weight:700;letter-spacing:.02em}
+  .count{
+    font-size:12.5px;color:var(--muted);background:rgba(255,255,255,.05);
+    border:1px solid var(--line);padding:5px 11px;border-radius:999px;white-space:nowrap;
+  }
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:22px}
+  .card{
+    position:relative;display:flex;flex-direction:column;overflow:hidden;cursor:pointer;outline:none;
+    background:linear-gradient(170deg,rgba(16,26,47,.92),rgba(8,13,25,.95));
+    border:1px solid var(--line);border-radius:var(--radius);
+    transition:transform .28s cubic-bezier(.2,.7,.3,1),border-color .28s,box-shadow .28s;
+  }
+  .card:hover{transform:translateY(-6px);border-color:rgba(74,168,255,.45);box-shadow:0 26px 50px -26px rgba(47,123,255,.75)}
+  .card:focus-visible{box-shadow:0 0 0 3px rgba(74,168,255,.55)}
+
+  .card-media{position:relative;aspect-ratio:16/10;overflow:hidden;background:radial-gradient(circle at 50% 40%,#12203a,#070c16)}
+  .card-media img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .card:hover .card-media img{transform:scale(1.06)}
+  .card-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,6,13,0) 35%,rgba(4,6,13,.85));pointer-events:none}
+  .ph{display:none;position:absolute;inset:0;place-items:center;color:rgba(255,255,255,.45)}
+  .ph.show{display:grid}
+  .ph svg{width:56px;height:56px}
+
+  .badge-new{
+    position:absolute;top:12px;left:12px;z-index:3;font-size:10.5px;font-weight:800;
+    letter-spacing:.1em;padding:5px 9px;border-radius:7px;color:#04101f;
+    background:linear-gradient(90deg,#7cc4ff,#2f7bff);
+    box-shadow:0 8px 18px -8px rgba(47,123,255,.9);
+  }
+
+  .fav-btn{
+    position:absolute;top:10px;right:10px;z-index:3;width:38px;height:38px;border-radius:11px;
+    display:grid;place-items:center;color:#fff;
+    background:rgba(4,8,16,.55);border:1px solid rgba(255,255,255,.14);
+    backdrop-filter:blur(6px);transition:.2s;
+  }
+  .fav-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;transition:.2s}
+  .fav-btn:hover{background:rgba(47,123,255,.35);border-color:rgba(74,168,255,.6);transform:scale(1.06)}
+  .fav-btn.active{
+    color:#7cc4ff;background:rgba(47,123,255,.28);border-color:rgba(124,196,255,.75);
+    box-shadow:0 0 18px -4px rgba(74,168,255,.9);
+  }
+  .fav-btn.active svg{fill:currentColor}
+
+  .card-body{padding:16px 16px 15px;display:flex;flex-direction:column;gap:7px;flex:1}
+  .card-title{font-size:16.5px;font-weight:700;letter-spacing:.01em}
+  .card-sub{font-size:13px;color:var(--muted);line-height:1.5;flex:1}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+  .chip{
+    font-size:11px;font-weight:600;letter-spacing:.03em;color:#bcd3f5;
+    background:rgba(47,123,255,.14);border:1px solid rgba(74,168,255,.28);
+    padding:5px 10px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .card-cta{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#7cc4ff}
+  .card-cta svg{width:14px;height:14px}
+
+  /* ---------- empty ---------- */
+  .empty{
+    display:grid;place-items:center;text-align:center;gap:10px;padding:70px 20px;
+    border:1px dashed rgba(255,255,255,.12);border-radius:22px;background:rgba(10,16,32,.5);
+  }
+  .empty > svg{width:46px;height:46px;color:rgba(124,196,255,.8);margin-bottom:6px}
+  .empty h3{font-size:17px}
+  .empty p{color:var(--muted);font-size:13.5px;max-width:400px;line-height:1.6}
+
+  /* ---------- footer ---------- */
+  .site-footer{
+    position:relative;z-index:1;border-top:1px solid var(--line);
+    padding:24px 20px 34px;text-align:center;color:#6f83a5;font-size:12.5px;line-height:1.7;
+  }
+  .site-footer strong{color:#bcd3f5;font-weight:700;letter-spacing:.08em}
+
+  /* ---------- modal ---------- */
+  .modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;opacity:0;visibility:hidden;transition:.25s}
+  .modal.open{opacity:1;visibility:visible}
+  .modal-backdrop{position:absolute;inset:0;background:rgba(2,4,10,.78);backdrop-filter:blur(8px)}
+  .modal-card{
+    position:relative;width:min(760px,100%);max-height:90vh;overflow:auto;
+    background:linear-gradient(175deg,#0e1729,#070b15);
+    border:1px solid rgba(74,168,255,.22);border-radius:22px;
+    box-shadow:0 50px 100px -40px rgba(0,0,0,.95);
+    transform:translateY(14px) scale(.985);
+    transition:transform .3s cubic-bezier(.2,.7,.3,1);
+    scrollbar-width:thin;
+  }
+  .modal.open .modal-card{transform:none}
+  .modal-close{
+    position:absolute;top:12px;right:12px;z-index:5;width:38px;height:38px;border-radius:11px;
+    display:grid;place-items:center;color:#fff;
+    background:rgba(4,8,16,.7);border:1px solid rgba(255,255,255,.16);transition:.2s;
+  }
+  .modal-close:hover{background:rgba(47,123,255,.35)}
+  .modal-close svg{width:17px;height:17px}
+
+  .modal-hero{
+    position:relative;aspect-ratio:16/8;display:grid;place-items:center;overflow:hidden;
+    background:radial-gradient(circle at 50% 45%,#12203a,#060a13);
+    border-bottom:1px solid var(--line);
+  }
+  .modal-hero img{width:100%;height:100%;object-fit:contain}
+  .modal-body{padding:24px 26px 26px;display:flex;flex-direction:column;gap:14px}
+  .modal-body h2{font-size:clamp(20px,4vw,26px);font-weight:800;letter-spacing:.01em}
+  .modal-body > p{color:#b6c8e4;font-size:14.5px;line-height:1.7}
+  .features{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px 18px}
+  .features li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:#cfe0ff;line-height:1.5}
+  .features svg{width:16px;height:16px;flex:0 0 auto;margin-top:2px;color:#4aa8ff}
+
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:13px;
+    font-size:14px;font-weight:700;transition:.22s;border:1px solid transparent;
+  }
+  .btn svg{width:17px;height:17px}
+  .btn-primary{
+    background:linear-gradient(180deg,#3f8bff,#1f5fd6);color:#fff;
+    box-shadow:0 16px 34px -16px rgba(47,123,255,.95);
+  }
+  .btn-primary:hover{filter:brightness(1.1);transform:translateY(-2px)}
+  .btn-ghost{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);color:#dbe8ff}
+  .btn-ghost:hover{background:rgba(47,123,255,.18);border-color:rgba(74,168,255,.5)}
+  .btn-fav.active{color:#7cc4ff;background:rgba(47,123,255,.22);border-color:rgba(124,196,255,.6)}
+  .btn-fav.active svg{fill:currentColor}
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:28px;z-index:200;transform:translate(-50%,20px);
+    background:linear-gradient(180deg,#1b3d7d,#12295a);
+    border:1px solid rgba(124,196,255,.45);color:#eaf4ff;
+    padding:12px 20px;border-radius:12px;font-size:13.5px;font-weight:600;
+    opacity:0;pointer-events:none;transition:.3s;
+    box-shadow:0 20px 40px -18px rgba(0,0,0,.9);
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  @media (max-width:560px){
+    .site-header{padding-top:38px}
+    .tabs{width:100%}
+    .tab{padding:10px 12px;font-size:13px;gap:7px}
+    .grid{grid-template-columns:1fr}
+    .modal-body{padding:20px 18px 22px}
+    .actions .btn{flex:1 1 100%;justify-content:center}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-orbs" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="logo.png" alt="Logo MEGA COMMUNITY" id="siteLogo" onerror="logoFallback(this)">
+    <div class="logo-fallback" id="logoFallback">MC</div>
+  </div>
+
+  <h1 class="brand"><span class="b1">MEGA</span> <span class="b2">COMMUNITY</span></h1>
+  <p class="tagline">Apps, jogos e muito mais — tudo grátis, sem enrolação.</p>
+
+  <form class="search-wrap" id="searchForm" role="search" autocomplete="off">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+      <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.7-3.7"/>
+    </svg>
+    <input id="search" type="search" placeholder="Pesquisar apps, jogos, categorias…" aria-label="Pesquisar no acervo">
+    <button type="button" class="clear-search" id="clearSearch" aria-label="Limpar pesquisa" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </form>
+
+  <nav class="tabs" aria-label="Navegação do acervo">
+    <button class="tab active" data-tab="home" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.8V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.8"/>
+      </svg>
+      Home
+    </button>
+    <button class="tab" data-tab="new" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round">
+        <path d="M13 2L4.5 13.5H11l-1 8.5L19.5 10H13l1-8z"/>
+      </svg>
+      Recém adicionados
+    </button>
+    <button class="tab" data-tab="favs" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4z"/>
+      </svg>
+      Curtidos
+    </button>
+  </nav>
+</header>
+
+<main class="container">
+  <div class="section-head">
+    <h2 id="sectionTitle">Todos os apps</h2>
+    <span class="count" id="count">0 itens</span>
+  </div>
+
+  <section class="grid" id="grid" aria-live="polite"></section>
+
+  <div class="empty" id="empty" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.7-3.7"/>
+    </svg>
+    <h3 id="emptyTitle">Nada por aqui</h3>
+    <p id="emptyText">Em breve novos apps, jogos e muito mais.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <strong>MEGA COMMUNITY</strong> — acervo gratuito de apps, jogos e muito mais.<br>
+  Todos os links pertencem aos seus respectivos desenvolvedores. Apoie os projetos que você curte.
+</footer>
+
+<!-- ================= MODAL ================= -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <button class="modal-close" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-hero">
+      <img id="mImg" alt="">
+      <div class="ph" id="mPh"></div>
+    </div>
+    <div class="modal-body">
+      <span class="chip" id="mCat" style="justify-self:start;align-self:flex-start"></span>
+      <h2 id="mTitle"></h2>
+      <p id="mDesc"></p>
+      <ul class="features" id="mFeat"></ul>
+      <div class="actions">
+        <a id="mOpen" class="btn btn-primary" target="_blank" rel="noopener noreferrer"></a>
+        <button id="mCopy" class="btn btn-ghost" type="button"></button>
+        <button id="mFav" class="btn btn-ghost btn-fav" type="button"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ================= ÍCONES ================= */
+const HEART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4z"/></svg>';
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+const EXTERNAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M19 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>';
+const COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+const FILM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M7 4.5v15M17 4.5v15M2.5 9.5h4.5M2.5 14.5h4.5M17 9.5h4.5M17 14.5h4.5"/></svg>';
+const MUSIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>';
+
+/* ================= DADOS ================= */
+const APPS = [
+  {
+    id: 'saimo-tv',
+    title: 'Saimo TV',
+    subtitle: 'Filmes, séries e IPTV ao vivo',
+    category: 'Filmes & Séries',
+    image: 'saimotv.png',
+    icon: FILM,
+    link: 'https://saimo-tv.pages.dev/app',
+    linkLabel: 'Abrir site',
+    added: '2026-10-28',
+    isNew: true,
+    tags: ['filmes','series','séries','iptv','tv','gratis','grátis','offline','streaming','animes','ao vivo'],
+    description: 'Um app de FILMES, SÉRIES e IPTV completamente grátis e sem anúncios. Tenha acesso a um catálogo gigante de filmes e séries, canais de TV ao vivo e a opção de baixar os títulos para assistir offline onde quiser. Monte sua lista de favoritos, continue de onde parou e muito mais — tudo em um só lugar, direto no navegador ou no seu celular.',
+    features: [
+      'Filmes e séries em catálogo atualizado',
+      'Canais de IPTV ao vivo',
+      '100% grátis e sem anúncios',
+      'Baixe e assista offline',
+      'Favoritos e continue assistindo',
+      'Funciona no navegador e no celular'
+    ]
+  },
+  {
+    id: 'opentune',
+    title: 'OpenTune',
+    subtitle: 'Músicas, podcasts e playlists',
+    category: 'Música',
+    image: 'openlogo.png',
+    icon: MUSIC,
+    link: 'https://www.mediafire.com/file/b4zi8ffbzahni7a/OpenTune_3.0.4.apk/file',
+    linkLabel: 'Baixar APK',
+    added: '2026-10-27',
+    isNew: true,
+    tags: ['musica','música','podcast','podcasts','playlist','spotify','apk','android','offline','gratis','grátis'],
+    description: 'OpenTune é o seu app de músicas, podcasts e playlists — no estilo dos grandes streamings, mas completamente gratuito. Ouça milhões de faixas, monte playlists, acompanhe seus podcasts favoritos e baixe músicas ou playlists inteiras para ouvir offline. Sem anúncios, sem assinatura e sem limite.',
+    features: [
+      'Músicas, podcasts e playlists',
+      'Download de músicas e playlists completas',
+      'Sem anúncios e sem assinatura',
+      'Modo offline para ouvir onde quiser',
+      'Interface limpa estilo Spotify',
+      'APK para Android — versão 3.0.4'
+    ]
+  }
+];
+
+/* ================= ESTADO ================= */
+const state = {
+  tab: 'home',
+  query: '',
+  favs: new Set(JSON.parse(localStorage.getItem('mc_favs') || '[]'))
+};
+
+const TITLES = { home: 'Todos os apps', new: 'Recém adicionados', favs: 'Curtidos' };
+const grid = document.getElementById('grid');
+const empty = document.getElementById('empty');
+const emptyTitle = document.getElementById('emptyTitle');
+const emptyText = document.getElementById('emptyText');
+const countEl = document.getElementById('count');
+const sectionTitle = document.getElementById('sectionTitle');
+const searchInput = document.getElementById('search');
+const clearBtn = document.getElementById('clearSearch');
+const toastEl = document.getElementById('toast');
+
+let currentId = null;
+let toastTimer = null;
+
+/* ================= HELPERS ================= */
+function logoFallback(img) {
+  img.style.display = 'none';
+  const fb = document.getElementById('logoFallback');
+  if (fb) fb.classList.add('show');
+}
+
+function imgFallback(img) {
+  img.style.display = 'none';
+  const ph = img.nextElementSibling;
+  if (ph) ph.classList.add('show');
+}
+
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
+}
+
+function saveFavs() {
+  localStorage.setItem('mc_favs', JSON.stringify([...state.favs]));
+}
+
+/* ================= LISTA ================= */
+function getList() {
+  let list = APPS.slice();
+
+  if (state.tab === 'new') {
+    list.sort((a, b) => new Date(b.added) - new Date(a.added));
+  }
+  if (state.tab === 'favs') {
+    list = list.filter(a => state.favs.has(a.id));
+  }
+  const q = state.query.trim().toLowerCase();
+  if (q) {
+    list = list.filter(a =>
+      (a.title + ' ' + a.category + ' ' + a.subtitle + ' ' + a.description + ' ' + a.tags.join(' '))
+        .toLowerCase().includes(q)
+    );
+  }
+  return list;
+}
+
+/* ================= RENDER ================= */
+function cardHTML(a) {
+  const fav = state.favs.has(a.id);
+  return `
+  <article class="card" data-id="${a.id}" tabindex="0" role="button" aria-label="Abrir detalhes de ${a.title}">
+    <div class="card-media">
+      <img src="${a.image}" alt="Imagem de ${a.title}" loading="lazy" onerror="imgFallback(this)">
+      <div class="ph">${a.icon}</div>
+      <div class="card-shade"></div>
+      ${a.isNew ? '<span class="badge-new">NOVO</span>' : ''}
+      <button class="fav-btn ${fav ? 'active' : ''}" type="button"
+              aria-label="${fav ? 'Remover' : 'Adicionar'} ${a.title} dos curtidos"
+              aria-pressed="${fav}">
+        ${HEART}
+      </button>
+    </div>
+    <div class="card-body">
+      <h3 class="card-title">${a.title}</h3>
+      <p class="card-sub">${a.subtitle}</p>
+      <div class="card-foot">
+        <span class="chip">${a.category}</span>
+        <span class="card-cta">${a.linkLabel} ${EXTERNAL}</span>
+      </div>
+    </div>
+  </article>`;
+}
+
+function render() {
+  const list = getList();
+  sectionTitle.textContent = TITLES[state.tab];
+  countEl.textContent = list.length + (list.length === 1 ? ' item' : ' itens');
+
+  if (!list.length) {
+    grid.innerHTML = '';
+    empty.hidden = false;
+    if (state.query.trim()) {
+      emptyTitle.textContent = 'Nada encontrado';
+      emptyText.textContent = `Não encontramos resultados para "${state.query.trim()}". Tente outra palavra.`;
+    } else if (state.tab === 'favs') {
+      emptyTitle.textContent = 'Nenhum curtido ainda';
+      emptyText.textContent = 'Toque no coração de um app para salvá-lo aqui.';
+    } else {
+      emptyTitle.textContent = 'Nada por aqui';
+      emptyText.textContent = 'Em breve novos apps, jogos e muito mais.';
+    }
+    return;
+  }
+
+  empty.hidden = true;
+  grid.innerHTML = list.map(cardHTML).join('');
+}
+
+/* ================= FAVORITOS ================= */
+function toggleFav(id) {
+  if (state.favs.has(id)) {
+    state.favs.delete(id);
+    toast('Removido dos curtidos');
+  } else {
+    state.favs.add(id);
+    toast('Adicionado aos curtidos');
+  }
+  saveFavs();
+  render();
+  syncModalFav();
+}
+
+function syncModalFav() {
+  const btn = document.getElementById('mFav');
+  if (!currentId) return;
+  const active = state.favs.has(currentId);
+  btn.classList.toggle('active', active);
+  btn.innerHTML = HEART + '<span>' + (active ? 'Curtido' : 'Curtir') + '</span>';
+  btn.setAttribute('aria-pressed', active);
+}
+
+/* ================= MODAL ================= */
+const modal = document.getElementById('modal');
+const mImg = document.getElementById('mImg');
+const mPh = document.getElementById('mPh');
+const mCat = document.getElementById('mCat');
+const mTitle = document.getElementById('mTitle');
+const mDesc = document.getElementById('mDesc');
+const mFeat = document.getElementById('mFeat');
+const mOpen = document.getElementById('mOpen');
+const mCopy = document.getElementById('mCopy');
+const mFav = document.getElementById('mFav');
+
+function openModal(id) {
+  const a = APPS.find(x => x.id === id);
+  if (!a) return;
+  currentId = id;
+
+  mImg.style.display = '';
+  mImg.alt = 'Imagem de ' + a.title;
+  mImg.src = a.image;
+  mImg.onerror = () => { mImg.style.display = 'none'; mPh.classList.add('show'); };
+  mPh.classList.remove('show');
+  mPh.innerHTML = a.icon;
+
+  mCat.textContent = a.category;
+  mTitle.textContent = a.title;
+  mDesc.textContent = a.description;
+  mFeat.innerHTML = a.features.map(f => `<li>${CHECK}<span>${f}</span></li>`).join('');
+  mOpen.href = a.link;
+  mOpen.innerHTML = EXTERNAL + '<span>' + a.linkLabel + '</span>';
+  mCopy.innerHTML = COPY + '<span>Copiar link</span>';
+  syncModalFav();
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  currentId = null;
+}
+
+/* ================= COPIAR ================= */
+async function copyCurrentLink() {
+  const a = APPS.find(x => x.id === currentId);
+  if (!a) return;
+  try {
+    await navigator.clipboard.writeText(a.link);
+    toast('Link copiado!');
+  } catch (e) {
+    const ta = document.createElement('textarea');
+    ta.value = a.link;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); toast('Link copiado!'); }
+    catch (_) { toast('Não foi possível copiar'); }
+    ta.remove();
+  }
+}
+
+/* ================= EVENTOS ================= */
+grid.addEventListener('click', (e) => {
+  const favBtn = e.target.closest('.fav-btn');
+  if (favBtn) {
+    e.stopPropagation();
+    toggleFav(favBtn.closest('.card').dataset.id);
+    return;
+  }
+  const card = e.target.closest('.card');
+  if (card) openModal(card.dataset.id);
+});
+
+grid.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const card = e.target.closest('.card');
+  if (card && !e.target.closest('.fav-btn')) {
+    e.preventDefault();
+    openModal(card.dataset.id);
+  }
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    state.tab = tab.dataset.tab;
+    render();
+  });
+});
+
+document.getElementById('searchForm').addEventListener('submit', e => e.preventDefault());
+
+searchInput.addEventListener('input', () => {
+  state.query = searchInput.value;
+  clearBtn.hidden = !searchInput.value;
+  render();
+});
+
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  state.query = '';
+  clearBtn.hidden = true;
+  searchInput.focus();
+  render();
+});
+
+modal.addEventListener('click', (e) => {
+  if (e.target.closest('[data-close]')) closeModal();
+});
+
+mCopy.addEventListener('click', copyCurrentLink);
+
+mFav.addEventListener('click', () => {
+  if (currentId) toggleFav(currentId);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+});
+
+/* ================= INIT ================= */
+render();
+</script>
+</body>
+</html>
